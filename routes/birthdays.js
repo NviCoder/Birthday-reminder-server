@@ -1,21 +1,26 @@
 const express = require("express");
 const {BirthDayModel , validBirthDay} = require("../models/birthDayModel")
 const router = express.Router();
+const {authToken} = require('../auth/authToken');
 
-router.get("/", async(req,res) => {
-  let data = await BirthDayModel.find({});
-  // res.header("Access-Control-Allow-Origin", "*");
+/**This router bring back the birthdays that Today!! */
+router.get("/", authToken, async(req,res) => {
+  //Filter the birthday for user that loged in.
+  let _userId = req.tokenData["_id"];
+  //let data = await BirthDayModel.find({userId:_userId , dateOfBirth: new Date().toJSON().substring(0,10)});
+  let data = await BirthDayModel.find({userId:_userId});
+  
   res.json(data);
 })
 
-router.post("/", async(req,res) => {
+router.post("/", authToken, async(req,res) => {
   let validBody = validBirthDay(req.body);
   if(validBody.error){
     return res.status(400).json(validBody.error.details);
   }
+  req.body.userId = req.tokenData["_id"];
   let birthday = new BirthDayModel(req.body);
   await birthday.save();
-  // res.header("Access-Control-Allow-Origin", "*");
   res.json(birthday);
 })
 

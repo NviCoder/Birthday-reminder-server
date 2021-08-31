@@ -6,6 +6,7 @@ const birthDaySchema = new mongoose.Schema({
   fullName:String,
   dateOfBirth:Date,
   img:String,
+  userId: String
 });
 
 
