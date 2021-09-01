@@ -3,16 +3,16 @@ const {BirthDayModel , validBirthDay} = require("../models/birthDayModel")
 const router = express.Router();
 const {authToken} = require('../auth/authToken');
 
-/**This router bring back the birthdays that Today!! */
+/**This router bring back all the birthdays!! */
 router.get("/", authToken, async(req,res) => {
-  //Filter the birthday for user that loged in.
+  //Filter the birthday for user that auth.
   let _userId = req.tokenData["_id"];
-  //let data = await BirthDayModel.find({userId:_userId , dateOfBirth: new Date().toJSON().substring(0,10)});
   let data = await BirthDayModel.find({userId:_userId});
   
   res.json(data);
 })
 
+/**This router Insert New friend birthday*/
 router.post("/", authToken, async(req,res) => {
   let validBody = validBirthDay(req.body);
   if(validBody.error){
@@ -24,10 +24,13 @@ router.post("/", authToken, async(req,res) => {
   res.json(birthday);
 })
 
-
-router.delete("/:idDel" ,async(req,res) => {
+/**This router Delete friend birthday only for this user*/
+router.delete("/:idDel" ,authToken,async(req,res) => {
   try{
-    let data = await BirthDayModel.deleteOne({_id:req.params.idDel});
+    let _userId = req.tokenData["_id"];
+    console.log("User Id: ",_userId);
+    console.log("_id: ",req.params.idDel);
+    let data = await BirthDayModel.deleteOne({_id:req.params.idDel, userId:_userId} );
     
     res.json(data);
   }
