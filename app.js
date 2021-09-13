@@ -5,6 +5,7 @@ const path = require("path");
 const http = require("http");
 const cors = require("cors");
 const cookieParser = require('cookie-parser')
+require('dotenv').config();
 
 
 const dbConnect = require("./db/mongoConnect");
@@ -32,5 +33,6 @@ routesInit(app);
 const server = http.createServer(app);
 
 let port = process.env.PORT || "3001";
+
 
 server.listen(port);
