@@ -16,7 +16,7 @@ exports.BirthDayModel = BirthDayModel;
 
 exports.validBirthDay = (_bodyData) => {
   let joiSchema = Joi.object({
-    fullName:Joi.string().min(2).max(99).required(),
+    fullName:Joi.string().min(2).max(15).required(),
     img:Joi.string().min(2).max(300),
     dateOfBirth:Joi.date().raw().required(),
 
